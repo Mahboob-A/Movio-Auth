@@ -16,7 +16,37 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings 
+from django.conf.urls.static import static 
 
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from rest_framework.permissions import AllowAny 
+
+
+# service documentation
+doc_schema_view = get_schema_view(
+    openapi.Info(
+        title="Movio Auth API",
+        default_version="v1.0",
+        description="API Endpoints for Movio Auth Service. Movio is a Video On Demand Platform Just Like YouTube",
+        contact=openapi.Contact(email="connect.mahboobalam@gmail.com"),
+        license=openapi.License(name="MIT Licence"),
+    ),
+    public=True,
+    permission_classes=(AllowAny,),
+)
+
+
+# Root Urls 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path(settings.ADMIN_URL, admin.site.urls),
 ]
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+admin.site.site_header = "Movio Auth Service API"
+admin.site.site_title = "Movio Auth Service Admin Portal"
+admin.site.index_title = "Welcome to Movio Auth Service API Portal"
