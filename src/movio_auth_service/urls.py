@@ -30,7 +30,7 @@ doc_schema_view = get_schema_view(
         title="Movio Auth API",
         default_version="v1.0",
         description="API Endpoints for Movio Auth Service. Movio is a Video On Demand Platform Just Like YouTube",
-        contact=openapi.Contact(email="connect.mahboobalam@gmail.com"),
+        contact=openapi.Contact(email="iammahboob.a@gmail.com"),
         license=openapi.License(name="MIT Licence"),
     ),
     public=True,
