@@ -46,6 +46,7 @@ THIRD_PARTH_APPS = [
     "rest_framework",
     "drf_yasg",
     "corsheaders",
+    "dj_rest_auth",
     "rest_framework.authtoken",
 ]
 
@@ -166,38 +167,56 @@ ADMIN_URL = env("ADMIN_URL")
 # ########################## Auth and DRF Settings
 """ API and AUTH SETTINGS """
 
-#   Rest Framework Settings
+# ########################## Rest Framework Settings
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "dj_rest_auth.jwt_auth.JWTCookieAuthentication",  # JWTCookieAuthentication
     ],
 }
 
+# ########################## DJ Rest AUTH Settings
+REST_AUTH = {
+    "USE_JWT": True,
+    "JWT_AUTH_HTTPONLY": False,  # to get refresh token. 
+    "JWT_AUTH_COOKIE": "movio-access-token",
+    "JWT_AUTH_REFRESH_COOKIE": "movio-refresh-token",
+    "JWT_TOKEN_CLAIMS_SERIALIZER": "core_apps.users.serializers.CustomTokenObtainPairSerializer",  # some additional data are inluced in the claim
+}
 
-# Simple-JWT Settings
+# ########################## Simple-JWT Settings
+# SIMPLE_JWT = {
+#     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10080),  # 7 days
+#     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+#     "ROTATE_REFRESH_TOKENS": False,
+#     "BLACKLIST_AFTER_ROTATION": False,
+#     "UPDATE_LAST_LOGIN": False,
+#     "ALGORITHM": "HS256",
+#     "VERIFYING_KEY": "",
+#     "AUDIENCE": None,
+#     "SIGNING_KEY": env("JWT_SIGNING_KEY"),
+#     "ISSUER": None,
+#     "JSON_ENCODER": None,
+#     "JWK_URL": None,
+#     "LEEWAY": 0,
+#     "AUTH_HEADER_TYPES": ("Bearer",),
+#     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
+#     "USER_ID_FIELD": "id",
+#     "USER_ID_CLAIM": "user_id",
+#     "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
+#     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+#     "TOKEN_TYPE_CLAIM": "token_type",
+#     "TOKEN_USER_CLASS": "rest_framework_simplejwt.models.TokenUser",
+#     "JTI_CLAIM": "jti",
+# }
+
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10080),  # 7 days
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
-    "ROTATE_REFRESH_TOKENS": False,
-    "BLACKLIST_AFTER_ROTATION": False,
-    "UPDATE_LAST_LOGIN": False,
-    "ALGORITHM": "HS256",
-    "VERIFYING_KEY": "",
-    "AUDIENCE": None,
-    "SIGNING_KEY": env("JWT_SIGNING_KEY"),
-    "ISSUER": None,
-    "JSON_ENCODER": None,
-    "JWK_URL": None,
-    "LEEWAY": 0,
     "AUTH_HEADER_TYPES": ("Bearer",),
-    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=43200),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
+    "ROTATE_REFRESH_TOKENS": True,
+    "SIGNING_KEY": env("JWT_SIGNING_KEY"),
     "USER_ID_FIELD": "id",
-    "USER_ID_CLAIM": "user_id",
-    "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
-    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
-    "TOKEN_TYPE_CLAIM": "token_type",
-    "TOKEN_USER_CLASS": "rest_framework_simplejwt.models.TokenUser",
-    "JTI_CLAIM": "jti",
+    "USER_IF_CLAIM": "user_id",
 }
 
 
@@ -207,7 +226,16 @@ CORS_URLS_REGEX = r"^api/.*$"
 
 # ##################### User Model
 
+AUTH_USER_MODEL = "users.CustomUser"
 
-# ##################### Networking 
+# ##################### Auth Backends
+
+AUTHENTICATION_BACKENDS = [
+    "core_apps.users.auth_backend.EmailAndUsernameCredentialAuthBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
+
+# ##################### Networking
 
 DJANGO_APP_PORT = env("DJANGO_APP_PORT")
