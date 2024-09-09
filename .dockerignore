@@ -1,0 +1,10 @@
+.idea
+venv
+venv/
+.gitignore
+.vscode 
+htmlcov/
+staticfiles/
+mediafiles/
+install.txt
+install.txt/
