@@ -1,0 +1,64 @@
+# 090924, Monday, 09.00 pm 
+services: 
+  movio_auth_api: 
+    restart: always 
+    build: 
+      context: . # codes in the current dir of the yml file
+      dockerfile: ./docker/development/django/Dockerfile
+    volumes: 
+      - .:/app:z 
+      - static_volume:/home/movio/app/staticfiles/
+      - media_volume:/home/movio/app/mediafiles/
+    expose: 
+      - "8000"
+    env_file: 
+      - ./.envs/.development/.django
+      - ./.envs/.development/.postgres
+    depends_on: 
+      - postgres 
+    command: /start.sh
+    networks: 
+      - movio-auth-network 
+
+  postgres: 
+    build: 
+      context: . 
+      dockerfile: ./docker/development/postgres/Dockerfile
+    image: pg-image
+    volumes: 
+      - dev_postgres_data:/var/lib/postgresql/data
+      - dev_postgres_data_backups:/backups
+    env_file: 
+      - ./.envs/.development/.postgres 
+    networks: 
+      - movio-auth-network 
+
+
+  nginx: 
+    build: 
+      context: . 
+      dockerfile: ./docker/development/nginx/Dockerfile
+    restart: always
+    depends_on: 
+      - movio_auth_api
+    volumes: 
+      - static_volume:/home/movio/app/staticfiles/
+      - media_volume:/home/movio/app/mediafiles/
+    ports: 
+      - "8080:80"
+    networks: 
+      - movio-auth-network 
+  
+networks: 
+  movio-auth-network:
+    driver: bridge
+  
+
+volumes: 
+  static_volume: 
+  media_volume: 
+  dev_postgres_data: {}
+  dev_postgres_data_backups: {}
+
+  
+  
