@@ -40,15 +40,15 @@ doc_schema_view = get_schema_view(
 
 # Root Urls
 urlpatterns = [
-    
-    # Admin 
+    # Admin
     path(settings.ADMIN_URL, admin.site.urls),
-    
     # Doc
     path("doc/", doc_schema_view.with_ui("redoc", cache_timeout=0)),
-    
-    # Common: Healthcheck 
+    # Common: Healthcheck
     path("api/v1/common/", include("core_apps.common.urls")),
+    
+    # Auth APIs - User Registration, Login, Logout, etc.
+    path("api/v1/auth/", include("core_apps.users.urls")),
 ]
 
 
