@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf import settings 
 from django.conf.urls.static import static 
 
@@ -38,9 +38,17 @@ doc_schema_view = get_schema_view(
 )
 
 
-# Root Urls 
+# Root Urls
 urlpatterns = [
+    
+    # Admin 
     path(settings.ADMIN_URL, admin.site.urls),
+    
+    # Doc
+    path("doc/", doc_schema_view.with_ui("redoc", cache_timeout=0)),
+    
+    # Common: Healthcheck 
+    path("api/v1/common/", include("core_apps.common.urls")),
 ]
 
 

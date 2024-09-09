@@ -205,5 +205,9 @@ SIMPLE_JWT = {
 
 CORS_URLS_REGEX = r"^api/.*$"
 
-# ##################### User Model 
+# ##################### User Model
 
+
+# ##################### Networking 
+
+DJANGO_APP_PORT = env("DJANGO_APP_PORT")
