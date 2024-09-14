@@ -16,6 +16,11 @@ import uuid
 
 from core_apps.users.managers import CustomUserManager
 
+phone_regex = RegexValidator(
+    regex=r"^\+?1?\d{9,15}$",
+    message="Phone number must be entered in the format: '+999999999'. Up to 16 digits allowed including country code.",
+)
+
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     """Custom User model"""
@@ -34,6 +39,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(verbose_name=_("Last Name"), max_length=35)
     email = models.EmailField(
         verbose_name=_("Email Address"), max_length=50, db_index=True, unique=True
+    )
+    phone_number = models.CharField(
+        verbose_name=_("Phone Number"),
+        validators=[phone_regex],
+        max_length=15,
+        unique=True, 
+        blank=True,
+        null=True,
     )
 
     is_active = models.BooleanField(verbose_name=_("Is Active"), default=True)

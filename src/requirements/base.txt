@@ -5,7 +5,6 @@ djangorestframework-simplejwt==5.3.0
 dj-rest-auth==3.0.0
 django-cors-headers==4.4.0
 drf-yasg==1.21.5
-pillow==9.4.0
 argon2-cffi==21.3.0
 requests==2.31.0
-gunicorn==22.0.0
+psycopg2-binary==2.9.5
