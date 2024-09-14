@@ -14,6 +14,7 @@ from core_apps.users.renderers import UserJSONRenderer, MultiUserJSONRenderer
 from core_apps.users.utils import get_jwt_token
 from core_apps.users.serializers import CustomTokenObtainPairSerializer
 
+
 class UserRegistrationAPI(APIView):
     """API for User Registration"""
 
@@ -24,20 +25,29 @@ class UserRegistrationAPI(APIView):
 
         try:
             if serializer.is_valid(raise_exception=True):
+                
                 user = serializer.save()
-                token = get_jwt_token(user_obj=user)
+                token = CustomTokenObtainPairSerializer.get_token(user)
                 return Response(
-                    {"status": "success", "token": token}, status=status.HTTP_200_OK
+                    {
+                        "status": "success",
+                        "refresh": str(token),
+                        "access": str(token.access_token),
+                    },
+                    status=status.HTTP_200_OK,
                 )
+            
             return Response(
                 {"status": "error", "detail": serializer.errors},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+            
         except ValidationError as ve:
             return Response(
                 {"status": "error", "detail": ve.detail},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+            
         except IntegrityError as ie:
             return Response(
                 {
@@ -84,9 +94,15 @@ class UserLoginAPI(APIView):
             user = authenticate(request=request, username=credential, password=password)
 
         if user:
-            token = get_jwt_token(user_obj=user)
+            token = CustomTokenObtainPairSerializer.get_token(user)
+
             return Response(
-                {"status": "success", "token": token}, status=status.HTTP_200_OK
+                {
+                    "status": "success",
+                    "refresh": str(token),
+                    "access": str(token.access_token),
+                },
+                status=status.HTTP_200_OK,
             )
 
         return Response(

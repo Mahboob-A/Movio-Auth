@@ -170,7 +170,7 @@ ADMIN_URL = env("ADMIN_URL")
 # ########################## Rest Framework Settings
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "dj_rest_auth.jwt_auth.JWTCookieAuthentication",  # JWTCookieAuthentication
+        "dj_rest_auth.jwt_auth.JWTAuthentication",  # JWTAuthentication  JWTCookieAuthentication
     ],
 }
 
@@ -211,7 +211,7 @@ REST_AUTH = {
 
 SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=43200),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=43200),  # 30 days or dev 
     "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
     "ROTATE_REFRESH_TOKENS": True,
     "SIGNING_KEY": env("JWT_SIGNING_KEY"),
