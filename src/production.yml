@@ -1,0 +1,61 @@
+# 140924, Saturday, 03.00 pm 
+services: 
+  movio_auth_api: 
+    restart: always 
+    build: 
+      context: . 
+      dockerfile: ./docker/production/django/Dockerfile
+    volumes: 
+      - prod_static_volume:/home/movio/app/staticfiles/
+      - prod_media_volume:/home/movio/app/mediafiles/
+    env_file: 
+      - ./.envs/.production/.django
+      - ./.envs/.production/.postgres
+    depends_on: 
+      - postgres 
+    command: /start.sh
+    networks: 
+      - movio-prod-auth-network 
+
+  postgres: 
+    build: 
+      context: . 
+      dockerfile: ./docker/production/postgres/Dockerfile
+    image: pg-image
+    volumes: 
+      - prod_postgres_data:/var/lib/postgresql/data
+      - prod_postgres_data_backups:/backups
+    env_file: 
+      - ./.envs/.production/.postgres 
+    networks: 
+      - movio-prod-auth-network 
+
+
+  nginx: 
+    build: 
+      context: . 
+      dockerfile: ./docker/production/nginx/Dockerfile
+    restart: always
+    depends_on: 
+      - movio_auth_api
+    volumes: 
+      - prod_static_volume:/home/movio/app/staticfiles/
+      - prod_media_volume:/home/movio/app/mediafiles/
+    ports: 
+      - "8080:80"
+    networks: 
+      - movio-prod-auth-network 
+  
+networks: 
+  movio-prod-auth-network :
+    driver: bridge
+  
+
+volumes: 
+  prod_static_volume: 
+  prod_media_volume: 
+  prod_postgres_data: {}
+  prod_postgres_data_backups: {}
+
+  
+  

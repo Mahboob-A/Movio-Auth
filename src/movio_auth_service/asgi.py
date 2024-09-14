@@ -11,7 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-# TODO: Change to porduction in prod environment 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'movio_auth_service.settings.dev')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'movio_auth_service.settings.production')
 
 application = get_asgi_application()

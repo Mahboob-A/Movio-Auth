@@ -11,7 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-# TODO: Change to porduction in prod environment
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'movio_auth_service.settings.dev')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'movio_auth_service.settings.production')
 
 application = get_wsgi_application()
